@@ -9,3 +9,10 @@ Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
 //route menambah produk
 Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
 Route::post('/produk', [ProdukController::class, 'store'])->name('produk.store');
+
+//route menghapus produk
+Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
+
+//route mengedit produk
+Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk.edit');
+Route::put('/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');

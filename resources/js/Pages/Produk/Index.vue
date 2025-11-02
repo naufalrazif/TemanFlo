@@ -1,27 +1,42 @@
-<template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Daftar Produk</h1>
+<script setup lang="ts">
+import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import Button from "@/components/ui/button/Button.vue";
+import Edit from "./Edit.vue";
+import Create from './Create.vue';
+import { Dialog ,DialogTrigger ,DialogContent } from '@/components/ui/dialog';
 
-    <!-- Tombol menuju halaman create -->
-    <Link
-      href="/produk/create"
-      class="inline-block mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-    >
-      + Tambah Produk
-    </Link>
+const props = defineProps({
+  produks: Array
+})
 
-    <!-- Daftar produk -->
-    <ul>
-      <li v-for="produk in produks" :key="produk.id" class="mb-2">
-        {{ produk.jenis_buket }} - Rp{{ produk.harga }}
-      </li>
-    </ul>
-  </div>
-</template>
+const hapusProduk = (id: number) => {
+  if (confirm('Apakah kamu yakin ingin menghapus produk ini?')) {
+    Inertia.delete(`/produk/${id}`);
+  }
+};
 
-<script setup>
-import { usePage, Link } from '@inertiajs/vue3'
+const editProduk = (id: number) => {
+  Inertia.get(`/produk/${id}/edit`);
+};
 
-const page = usePage()
-const produks = page.props.produks || []
 </script>
+
+<template>
+
+Tambah Produk
+<Dialog>
+  <DialogTrigger>
+    <Button>Tambah Produk</Button>
+  </DialogTrigger>
+  <DialogContent class="bg-[#f3cbb7] p-6 rounded-xl border-none">
+    <Create />
+  </DialogContent>
+  
+    
+</Dialog>
+    
+
+
+  
+</template>

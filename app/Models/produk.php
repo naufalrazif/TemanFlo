@@ -15,11 +15,12 @@ class Produk extends Model
 
     // Kolom yang bisa diisi (mass assignable)
     protected $fillable = [
+        'nama',
         'jenis_buket',
         'tema',
-        'size',
         'deskripsi',
         'harga',
+        'foto',
     ];
 
 

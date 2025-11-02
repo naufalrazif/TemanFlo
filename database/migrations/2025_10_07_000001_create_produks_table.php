@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('produks', function (Blueprint $table) {
     $table->id();
+    $table->string('nama');
     $table->enum('jenis_buket', ['buket_bunga', 'buket_snack', 'buket_boneka', 'buket_uang']);
-    $table->set('tema', ['graduation', 'birthday', 'wedding']);
-    $table->enum('size', ['kecil', 'sedang', 'besar']);
+    $table->enum('tema', ['graduation', 'birthday', 'wedding']);
     $table->text('deskripsi');
     $table->decimal('harga', 10, 2);
+    $table->string('foto');
     $table->timestamps();
 });
 

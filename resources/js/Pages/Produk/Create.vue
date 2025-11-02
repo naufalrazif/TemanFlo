@@ -1,56 +1,93 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+
+const form = ref({
+  nama: "",
+  jenis_buket: "",
+  tema: "",
+  harga: "",
+  deskripsi: "",
+  foto: "",
+});
+
+const submit = () => {
+  const data = new FormData();
+  Object.entries(form.value).forEach(([key, value]) => {
+    if (value) data.append(key, value as any);
+  });
+  Inertia.post("/produk", data);
+};
+</script>
+
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Tambah Produk</h1>
-    <Link href="/produk" class="text-sm text-gray-600 mb-4 inline-block"> Kembali</Link>
+  <div class="bg-[#f3cbb7] p-6 rounded-xl space-y-4">
+    <h2 class="text-lg font-semibold">Tambah Produk</h2>
 
-    <form @submit.prevent="submit" class="max-w-md mt-4">
-      <div class="mb-3">
-        <label>Jenis Buket</label>
-        <input v-model="form.jenis_buket" class="w-full border p-2" />
-        <div v-if="form.errors.jenis_buket" class="text-red-600 text-sm">{{ form.errors.jenis_buket }}</div>
-      </div>
+    <div class="flex items-center gap-4">
+      <Label for="nama" class="w-1/3 text-right">Nama</Label>
+      <Input id="nama" v-model="form.nama"  class="flex-1 bg-white" />
+    </div>
 
-      <div class="mb-3">
-        <label>Tema</label>
-        <input v-model="form.tema" class="w-full border p-2" />
-        <div v-if="form.errors.tema" class="text-red-600 text-sm">{{ form.errors.tema }}</div>
-      </div>
+    <div class="flex items-center gap-4">
+      <Label for="category" class="w-1/3 text-right">Kategori</Label>
+      <Select v-model="form.jenis_buket">
+        <SelectTrigger class="flex-1 bg-white">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="buket_bunga">Buket Bunga</SelectItem>
+          <SelectItem value="buket_snack">Buket Snack</SelectItem>
+          <SelectItem value="buket_boneka">Buket Boneka</SelectItem>
+          <SelectItem value="buket_uang">Buket Uang</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
 
-      <div class="mb-3">
-        <label>Size</label>
-        <input v-model="form.size" class="w-full border p-2" />
-        <div v-if="form.errors.size" class="text-red-600 text-sm">{{ form.errors.size }}</div>
-      </div>
+    <div class="flex items-center gap-4">
+      <Label for="category" class="w-1/3 text-right">Tema</Label>
+      <Select v-model="form.tema">
+        <SelectTrigger class="flex-1 bg-white">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="birthday">Birthday</SelectItem>
+          <SelectItem value="graduation">Graduation</SelectItem>
+          <SelectItem value="wedding">Wedding</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
 
-      <div class="mb-3">
-        <label>Deskripsi</label>
-        <textarea v-model="form.deskripsi" class="w-full border p-2"></textarea>
-        <div v-if="form.errors.deskripsi" class="text-red-600 text-sm">{{ form.errors.deskripsi }}</div>
-      </div>
+    <div class="flex items-center gap-4">
+      <Label for="nama" class="w-1/3 text-right">Harga</Label>
+      <Input id="nama" type="number" v-model="form.harga" class="flex-1 bg-white" />
+    </div>
 
-      <div class="mb-3">
-        <label>Harga</label>
-        <input type="number" v-model="form.harga" class="w-full border p-2" />
-        <div v-if="form.errors.harga" class="text-red-600 text-sm">{{ form.errors.harga }}</div>
-      </div>
+    <div  class="flex items-center gap-4">
+      <Label for="deskripsi" class="w-1/3 text-right">Deskripsi</Label>
+      <Textarea id="deskripsi" v-model="form.deskripsi"  class="flex-1 bg-white"  />
+    </div>
 
-      <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Simpan</button>
-    </form>
+    <div class="flex items-center gap-4">
+      <Label for="foto" class="w-1/3 text-right">Foto</Label>
+      <Input 
+        id="foto" 
+        type="file" 
+        class="flex-1 bg-white" 
+        accept="image/*" 
+        @change="e => form.foto = e.target.files[0]"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <Button class="bg-[#5c7b66] hover:bg-[#4e6958] text-white" @click="submit">
+        Submit
+      </Button>
+    </div>
   </div>
 </template>
-
-<script setup>
-import { Link, useForm } from '@inertiajs/inertia-vue3'
-
-const form = useForm({
-  jenis_buket: '',
-  tema: '',
-  size: '',
-  deskripsi: '',
-  harga: ''
-})
-
-function submit() {
-  form.post('/produk')
-}
-</script>
