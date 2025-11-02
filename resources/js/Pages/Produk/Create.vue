@@ -1,28 +1,40 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import { useForm, } from '@inertiajs/vue3'
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
-const form = ref({
+const form = useForm({
   nama: "",
   jenis_buket: "",
   tema: "",
   harga: "",
   deskripsi: "",
-  foto: "",
+  foto: null as File | null,
 });
 
-const submit = () => {
-  const data = new FormData();
-  Object.entries(form.value).forEach(([key, value]) => {
-    if (value) data.append(key, value as any);
+const handleSubmit = () => {
+  form.post('/produk', {
+    forceFormData: true, // Penting untuk file upload
+    onSuccess: () => {
+      form.reset(); // Reset form setelah sukses
+    },
+    onError: (errors) => {
+      console.log('Errors:', errors);
+    }
   });
-  Inertia.post("/produk", data);
-};
+}
+
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files[0]) {
+    form.foto = target.files[0];
+  }
+}
+
 </script>
 
 <template>
@@ -32,6 +44,7 @@ const submit = () => {
     <div class="flex items-center gap-4">
       <Label for="nama" class="w-1/3 text-right">Nama</Label>
       <Input id="nama" v-model="form.nama"  class="flex-1 bg-white" />
+      <div class="text-sm text-red-600" v-if="form.errors.nama">{{ form.errors.nama }}</div>
     </div>
 
     <div class="flex items-center gap-4">
@@ -47,6 +60,7 @@ const submit = () => {
           <SelectItem value="buket_uang">Buket Uang</SelectItem>
         </SelectContent>
       </Select>
+      <div class="text-sm text-red-600" v-if="form.errors.jenis_buket">{{ form.errors.jenis_buket }}</div>
     </div>
 
     <div class="flex items-center gap-4">
@@ -61,16 +75,19 @@ const submit = () => {
           <SelectItem value="wedding">Wedding</SelectItem>
         </SelectContent>
       </Select>
+      <div class="text-sm text-red-600" v-if="form.errors.tema">{{ form.errors.tema }}</div>
     </div>
 
     <div class="flex items-center gap-4">
       <Label for="nama" class="w-1/3 text-right">Harga</Label>
       <Input id="nama" type="number" v-model="form.harga" class="flex-1 bg-white" />
+      <div class="text-sm text-red-600" v-if="form.errors.harga">{{ form.errors.harga }}</div>
     </div>
 
     <div  class="flex items-center gap-4">
       <Label for="deskripsi" class="w-1/3 text-right">Deskripsi</Label>
       <Textarea id="deskripsi" v-model="form.deskripsi"  class="flex-1 bg-white"  />
+      <div class="text-sm text-red-600" v-if="form.errors.deskripsi">{{ form.errors.deskripsi }}</div>
     </div>
 
     <div class="flex items-center gap-4">
@@ -80,12 +97,13 @@ const submit = () => {
         type="file" 
         class="flex-1 bg-white" 
         accept="image/*" 
-        @change="e => form.foto = e.target.files[0]"
+       @change="handleFileChange"
       />
+      <div class="text-sm text-red-600" v-if="form.errors.foto">{{ form.errors.foto }}</div>
     </div>
 
     <div class="flex justify-end">
-      <Button class="bg-[#5c7b66] hover:bg-[#4e6958] text-white" @click="submit">
+      <Button class="bg-[#5c7b66] hover:bg-[#4e6958] text-white"  @click="handleSubmit">
         Submit
       </Button>
     </div>

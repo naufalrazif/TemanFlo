@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+
 import Button from "@/components/ui/button/Button.vue";
-import Edit from "./Edit.vue";
+
 import Create from './Create.vue';
 import { Dialog ,DialogTrigger ,DialogContent } from '@/components/ui/dialog';
 
@@ -10,15 +10,7 @@ const props = defineProps({
   produks: Array
 })
 
-const hapusProduk = (id: number) => {
-  if (confirm('Apakah kamu yakin ingin menghapus produk ini?')) {
-    Inertia.delete(`/produk/${id}`);
-  }
-};
 
-const editProduk = (id: number) => {
-  Inertia.get(`/produk/${id}/edit`);
-};
 
 </script>
 
